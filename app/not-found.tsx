@@ -1,0 +1,2 @@
+import { ButtonLink, Label } from '@/components/ui';
+export default function NotFound() { return <section className="container not-found"><Label>Error / 404</Label><span className="error-number" aria-hidden="true">404<span>_</span></span><h1>Looks like this route<br />wasn’t engineered yet.</h1><p>The page may have moved, or the link may be incomplete.</p><ButtonLink href="/">Return to PentaForge</ButtonLink></section>; }

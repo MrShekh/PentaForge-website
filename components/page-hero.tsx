@@ -1,0 +1,2 @@
+import { Breadcrumbs, Label, ButtonLink } from '@/components/ui';
+export function PageHero({ category, title, summary, breadcrumbs, cta }: { category: string; title: string; summary: string; breadcrumbs: { label: string; href: string }[]; cta?: string }) { return <section className="page-hero container"><Breadcrumbs items={breadcrumbs} /><Label>{category}</Label><h1>{title}</h1><p>{summary}</p>{cta && <ButtonLink href="/contact">{cta}</ButtonLink>}</section>; }

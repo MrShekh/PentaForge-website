@@ -1,0 +1,7 @@
+import { PageHero } from '@/components/page-hero';
+import { technologies } from '@/data/process';
+import { Capabilities } from '@/components/sections/capabilities';
+import { FinalCTA } from '@/components/sections/final-cta';
+import { pageMetadata } from '@/lib/seo';
+export const metadata = pageMetadata('Technology & Engineering', 'Thoughtful architecture, maintainable software and technology chosen around your product’s requirements.', '/company/technology');
+export default function Page() { return <><PageHero category="Engineering" title="The right tools for the right system." summary="We choose technology based on what the product needs — not because it’s fashionable. Business rules, users, data and operating requirements lead the decision." breadcrumbs={[{ label: 'Company', href: '/company' }, { label: 'Technology', href: '/company/technology' }]} /><section className="container section section-after-hero"><div className="technology-grid technology-large">{technologies.map(t => <span key={t}>{t}</span>)}</div><div className="detail-two-column"><div><h3>Designed to be maintained.</h3><p>Clear boundaries, typed interfaces, documented decisions and tests for important business behavior help keep a system understandable as it grows.</p></div><div><h3>Designed to be operated.</h3><p>Access controls, secret management, deployment procedures, monitoring and recovery are considered alongside application features.</p></div></div></section><Capabilities /><FinalCTA /></>; }
