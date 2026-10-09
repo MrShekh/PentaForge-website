@@ -1,9 +1,10 @@
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { leadSchema } from '@/lib/lead-schema';
 import { deliverLead, DeliveryError } from '@/lib/lead-adapter';
 export const runtime = 'nodejs';
 const attempts = new Map<string, { count: number; expires: number }>();
 function result(body: unknown, status: number) { return Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } }); }
+export async function GET() { return result({ submissionId: randomUUID() }, 200); }
 export async function POST(request: Request) {
  const origin = request.headers.get('origin');
  const allowed = new Set([new URL(request.url).origin, process.env.NEXT_PUBLIC_SITE_URL].filter(Boolean));

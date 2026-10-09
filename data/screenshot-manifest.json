@@ -1,0 +1,130 @@
+[
+  {
+    "source": "Manufacturing ERP/dashboard.png",
+    "src": "/projects/jewellery-manufacturing/dashboard.webp",
+    "width": 1917,
+    "height": 928,
+    "bytes": 41440,
+    "redacted": true
+  },
+  {
+    "source": "Manufacturing ERP/casting balance.png",
+    "src": "/projects/jewellery-manufacturing/casting.webp",
+    "width": 1917,
+    "height": 922,
+    "bytes": 31048,
+    "redacted": true
+  },
+  {
+    "source": "Manufacturing ERP/gold recovery.png",
+    "src": "/projects/jewellery-manufacturing/recovery.webp",
+    "width": 1917,
+    "height": 930,
+    "bytes": 37816,
+    "redacted": true
+  },
+  {
+    "source": "Manufacturing ERP/purity configuration.png",
+    "src": "/projects/jewellery-manufacturing/purity.webp",
+    "width": 1917,
+    "height": 931,
+    "bytes": 34530,
+    "redacted": true
+  },
+  {
+    "source": "Manufacturing ERP/report.png",
+    "src": "/projects/jewellery-manufacturing/reports.webp",
+    "width": 1916,
+    "height": 922,
+    "bytes": 43578,
+    "redacted": true
+  },
+  {
+    "source": "Jewellery ERP/dashboard.png",
+    "src": "/projects/jewellery-operations/dashboard.webp",
+    "width": 1912,
+    "height": 926,
+    "bytes": 122506,
+    "redacted": true
+  },
+  {
+    "source": "Jewellery ERP/admin stock.png",
+    "src": "/projects/jewellery-operations/stock.webp",
+    "width": 1897,
+    "height": 935,
+    "bytes": 81096,
+    "redacted": true
+  },
+  {
+    "source": "Jewellery ERP/order registery.png",
+    "src": "/projects/jewellery-operations/production-register.webp",
+    "width": 1902,
+    "height": 930,
+    "bytes": 32254,
+    "redacted": true
+  },
+  {
+    "source": "Jewellery ERP/analytics.png",
+    "src": "/projects/jewellery-operations/analytics.webp",
+    "width": 1905,
+    "height": 927,
+    "bytes": 35694,
+    "redacted": true
+  },
+  {
+    "source": "polishing software/dashboard.png",
+    "src": "/projects/jewellery-polishing/dashboard.webp",
+    "width": 1917,
+    "height": 920,
+    "bytes": 32798,
+    "redacted": true
+  },
+  {
+    "source": "polishing software/order registery.png",
+    "src": "/projects/jewellery-polishing/order-registry.webp",
+    "width": 1917,
+    "height": 928,
+    "bytes": 35156,
+    "redacted": true
+  },
+  {
+    "source": "polishing software/customer.png",
+    "src": "/projects/jewellery-polishing/customer-history.webp",
+    "width": 1917,
+    "height": 926,
+    "bytes": 34300,
+    "redacted": true
+  },
+  {
+    "source": "Billing Software/dashboard.png",
+    "src": "/projects/jewellery-billing/dashboard.webp",
+    "width": 1917,
+    "height": 926,
+    "bytes": 99124,
+    "redacted": true
+  },
+  {
+    "source": "Billing Software/bill creating .png",
+    "src": "/projects/jewellery-billing/create-bill.webp",
+    "width": 1916,
+    "height": 923,
+    "bytes": 27818,
+    "redacted": true
+  },
+  {
+    "source": "Billing Software/bill.png",
+    "src": "/projects/jewellery-billing/bills.webp",
+    "width": 1917,
+    "height": 931,
+    "bytes": 18772,
+    "redacted": true
+  },
+  {
+    "source": "Billing Software/advance stock.png",
+    "src": "/projects/jewellery-billing/advance-stock.webp",
+    "width": 1917,
+    "height": 925,
+    "bytes": 92408,
+    "redacted": true
+  }
+]

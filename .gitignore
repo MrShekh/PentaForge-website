@@ -6,4 +6,5 @@ out/
 *.tsbuildinfo
 .sites-runtime/
 test-results/
+.private/
 .openai/

@@ -1,0 +1,10 @@
+.private/
+.env
+.env.*
+.next/
+node_modules/
+*.log
+*.tsbuildinfo
+test-results/
+tests/
+docs/

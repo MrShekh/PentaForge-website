@@ -1,88 +1,97 @@
 # PentaForge
 
-A complete Next.js marketing website for a software engineering company. The site explains real business workflows before technical detail, with an editorial warm-white design, cobalt accent, connected system diagrams and responsive layouts.
+PentaForge’s business software website, built with Next.js 16.3.6 App Router, React 19, TypeScript and Tailwind CSS 4. The existing light design, Manrope / IBM Plex Mono typography, animation system and interactive planners are retained. Four real custom systems and 16 privacy-redacted screenshots provide the project evidence.
 
-## Stack
+## Develop and validate
 
-Next.js 16.3.6 App Router, React 19, TypeScript, Tailwind CSS 4, Framer Motion, Lucide and Zod. Next.js Server Components render the page content; client components are limited to navigation, interactive diagrams, filters, planners, forms and optional analytics. No GSAP dependency is needed for the restrained animation system. Manrope and IBM Plex Mono are self-hosted at build time with `next/font`. Verified screenshots use `next/image` when supplied; the initial previews are clearly labeled HTML interface concepts.
+For the two-project production setup, follow [the Vercel deployment guide](docs/VERCEL-DEPLOYMENT.md). It covers the database, private file storage, administrator setup and matching webhook configuration.
 
-## Run locally
+Use Node.js 24 and the committed lockfile. On Windows use `npm.cmd` if PowerShell blocks `npm.ps1`.
 
 ```sh
 npm ci
 npm run dev
-```
-
-Open http://localhost:3000. Node.js 22 or 24 LTS is recommended. Copy `.env.example` to `.env.local` and fill in only verified values. No secrets are committed.
-
-```sh
 npm run lint
 npm run typecheck
 npm test
 npm run build
 npm start
+npm run verify:routes
 ```
 
-With a running server and no lead webhook configured, `npm run verify:routes` crawls internal links, checks headings, unique metadata, JSON-LD syntax, anchors, robots, sitemap, unknown-route 404s and form responses. Set `TEST_BASE_URL` to check another local server. Reports are saved in ignored `test-results/`.
+The route audit expects a local server on port 3000 and skips valid lead submission by default. Set `TEST_BASE_URL` to test another local port. `TEST_LEAD_DELIVERY=accepted` or `unconfigured` opts into synthetic delivery checks; use these only with isolated test services. Results are written to ignored `test-results/`.
 
-## Structure
+After a build with the real `NEXT_PUBLIC_SITE_URL`, set `TEST_SITE_URL` to that same origin and run `node --import tsx scripts/verify-seo.ts`. This checks rendered HTML, metadata, schema, sitemap and robots. No request is sent to that domain.
 
-```
-app/                 Routes, metadata, error pages, API and global styles
-components/          Shared page, card, navigation and layout components
-  diagrams/          Hero system and interactive industry workflows
-  forms/             Contact, project wizard, local planner and verification
-  sections/          Composable homepage sections
-config/site.ts       Company identity and verified public configuration
-data/                Services, industries, products, case studies, articles
-lib/                 SEO, route inventory, validation, delivery adapter
-public/              Favicon and future verified screenshots
-tests/               Meaningful lead validation and local planner tests
-scripts/             Route and API verification
-```
+## Architecture
 
-## Routes and content
+- `app/`: server-rendered public routes, static generation, metadata routes, OG image routes and lead API.
+- `data/`: services, industries, products, case studies, articles and screenshot metadata.
+- `components/`: navigation, reusable sections, cards, workflows, accessible screenshot dialog and forms.
+- `config/site.ts`: canonical origin, public contact channels and social links.
+- `lib/`: SEO helpers, inquiry validation, delivery adapter, deterministic planner and consent-gated conversion events.
+- `public/projects/`: approved, opaque-redacted WebP screenshots. Original files are never served.
 
-The homepage includes the full brief’s story and interactions. Service and industry detail routes are generated from typed data. Products, project outlines and article pages have dedicated route families. Unknown slugs return 404. Company, process, technology, contact, privacy and terms pages complete the site.
+## Configuration
 
-Add a product in `data/products.ts`. Its navigation, listing and detail page are generated automatically. Product concepts are not advertised as released software. Update the product status model and verified availability copy when a real release is ready.
+Copy `.env.example` to `.env.local` for development. Configure environment variables in the hosting dashboard for deployment, then rebuild.
 
-Add case studies in `data/caseStudies.ts`. Supply verified problem, workflow, solution and challenge text. Put a screenshot in `public/images/` and set `image` and `imageAlt`. The card and detail page use `next/image`. Replace the explicit verification-pending/result placeholders only with approved project facts. Current illustrative interfaces contain sample data and are not customer screenshots.
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Final HTTPS canonical origin; all canonical, sitemap, OG and schema URLs derive from it. |
+| `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_CONTACT_PHONE` | Visible email/phone links. They do not configure form delivery. |
+| `NEXT_PUBLIC_LINKEDIN_URL`, `NEXT_PUBLIC_INSTAGRAM_URL`, `NEXT_PUBLIC_GITHUB_URL` | Optional real HTTPS social links; blank values remain hidden. |
+| `LEAD_WEBHOOK_URL` | Server-only HTTPS endpoint accepting validated inquiry JSON. |
+| `LEAD_WEBHOOK_TOKEN` | Optional server-only bearer credential for that endpoint. |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Optional Cloudflare spam protection; configure both keys together. |
+| `NEXT_PUBLIC_GA_ID` | Optional Google Analytics `G-…` ID. |
+| `NEXT_PUBLIC_VERCEL_ANALYTICS` | Set `true` to enable consent-gated Vercel Analytics. |
+| `GOOGLE_SITE_VERIFICATION` | Search Console verification token. |
 
-Articles use a typed, section-based content architecture in `data/articles.ts`. Each section has an anchor, title and paragraphs; this generates the table of contents and reading time. No arbitrary HTML is injected. Set `status: 'published'`, a verified author and a real ISO publication date after editorial approval. Draft pages remain available for review, are intentionally `noindex`, and are excluded from the sitemap. Published articles are included automatically and emit Article JSON-LD when author/date are present. Add an image model later if editorial photography becomes available.
+No final domain or real contact/provider details are present. With no canonical origin, pages are `noindex, follow`, the sitemap has no URL entries, and absolute canonical/OG URLs are omitted. This avoids baking a guessed or temporary domain into the website. Setting the final origin and rebuilding enables indexable pages and complete metadata. Do not put secrets in `NEXT_PUBLIC_*` variables.
 
-## Company configuration and SEO
+## Vercel and the custom domain
 
-`config/site.ts` centralizes the company name, description, contact channels, socials and canonical origin. Empty social/contact values are hidden. There are no invented addresses, client logos, results, reviews or contact details.
+Import this repository as a Next.js project, install with `npm ci`, and build with `npm run build`. Set the intended production environment values before that build. Connect the custom domain and DNS separately in Vercel when ready; this task did not modify either. After deployment verify the canonical origin, `/sitemap.xml`, `/robots.txt`, social cards and a real inquiry end to end. A displayed email address alone does not connect the forms.
 
-Set `NEXT_PUBLIC_SITE_URL` to the final public HTTPS origin, for example your verified custom domain. It must not be a Vercel preview URL. When unset, the app deliberately omits canonicals and sitemap entries instead of inventing a production domain. Once configured, every page gets a canonical and Open Graph URL, and `/sitemap.xml` and `/robots.txt` reference the correct origin. Titles/descriptions and Open Graph/Twitter text are route-specific. Organization, WebSite, Service and BreadcrumbList structured data are centralized. No ratings or fake business facts are emitted.
+## Content and screenshots
 
-`GOOGLE_SITE_VERIFICATION` adds Search Console verification. After public deployment, verify the real domain and submit its sitemap in Search Console. Review draft publication settings before indexing. A social preview image is not fabricated; add an approved image and metadata when available.
+`data/caseStudies.ts` contains typed projects, workflows, supported features, platforms, technologies, cover images and related routes. Unknown technologies are left empty. `data/screenshots.ts` centralises titles, alt text and feature descriptions, using source dimensions from `data/screenshot-manifest.json`.
 
-## Forms and delivery
+To add screenshots, put originals in ignored `.private/screenshots/`, inspect them at full resolution, and add exact opaque masks to `scripts/prepare-screenshots.mjs` where needed. Run `node scripts/prepare-screenshots.mjs`, inspect **every** output, then register approved images in `data/screenshots.ts`. The script needs the local private originals; ordinary builds do not. Keep private originals backed up securely outside Git. `.vercelignore` also excludes `.private/`. Do not copy unredacted customer images back into `public/`.
 
-Contact and project-wizard requests POST to `/api/leads`. Shared Zod validation runs in the browser and server. The route checks origin/content type, bounds the body size, validates consent and scope, and uses a honeypot and bounded instance-local request limit. Inputs are rendered as escaped text. The delivery adapter posts JSON to `LEAD_WEBHOOK_URL` over HTTPS, with optional bearer `LEAD_WEBHOOK_TOKEN`. Keep both server-only. Configure the receiving endpoint to return 2xx only after durable acceptance; email/CRM delivery can then be connected there.
+Screenshots retain their full aspect ratios. Cards and gallery images use `next/image`; below-fold assets lazy-load. The native dialog supports Escape, arrows, close, focus return and original-resolution zoom. The screenshot report maps all 22 originals to their disposition.
 
-Without a webhook, valid submissions return **503**, never a fake success. The form retains the entered details and offers a copyable summary. A success state appears only after an adapter acceptance. Timeouts are reported as unconfirmed delivery. No form payload is logged by the application.
+Products are separate from custom projects. `ProductStatus` supports Available, Customizable, In Development and Coming Soon. The five existing entries use `null` because commercial status is unknown; public pages say “Discuss availability.” Confirm release status, features, platforms, pricing and reusable-product rights before changing that. Do not repurpose a custom client screenshot as a product screenshot without confirmation.
 
-For Turnstile, configure `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` together, and register the deployment’s hostname. The server verifies the challenge. Add platform/WAF rate limiting before public launch: the included limiter is per process and is not a distributed abuse control. Trusted proxy handling must match your hosting environment. Protect the receiver against duplicate deliveries if you add retry behavior.
+Articles are controlled by `status` in `data/articles.ts`. Only published articles appear in listings, static params, related links, OG routes and sitemap. Three substantive guides are published; the other three return 404. New articles need unique useful content, a genuine author/publication date and related internal links.
 
-The guided problem explainer uses deterministic keyword rules in `lib/planner.ts`, with a visible local-demo label. It performs no AI request. Its contact link carries the brief as a URL parameter, so users are told to avoid confidential data. Replace this handoff with an agreed storage/session approach if sensitive inputs become a requirement. The project wizard retains scope only in component memory; it does not claim to save unfinished projects.
+## SEO
+
+`lib/seo.ts` generates per-page metadata. `/og/default` and `/og/[slug]` provide 1200×630 branded PNG cards for projects, product inquiries and published articles. Favicon SVG, 32px PNG, 180px Apple icon and 192/512px brand assets are included. JSON-LD covers Organization (Ahmedabad, Gujarat, India), WebSite, BreadcrumbList, Service, Article and project CreativeWork. No invented reviews, prices, client identities or Product offers are emitted. `lib/routes.ts` is the canonical route inventory.
+
+## Contact and project planner
+
+Both forms POST JSON to `/api/leads`, validate with Zod on client and server, then use `lib/lead-adapter.ts`. Contact payload: name, business, phone, email, need, industry, message, consent and source. Planner payload additionally includes `scope.need`, `scope.platforms`, `scope.features` and `scope.stage`.
+
+The delivery adapter sends that JSON to `LEAD_WEBHOOK_URL` with optional bearer authentication. Honeypot and verification tokens are removed before delivery. Only a 2xx provider acceptance returns success. Missing configuration returns 503; network/provider failure returns 502. The browser keeps entered data and offers a copyable summary on error. There is no database or email delivery configured today, and the API does not persist inquiries locally.
+
+The API also limits request size, checks origins, validates optional Turnstile verification and applies a bounded per-instance request limiter. Use hosting/WAF rate limits for shared protection across instances. The deterministic problem explainer makes no AI call. Its optional contact handoff uses one-time memory with a ten-minute expiry, not URLs or persistent storage.
 
 ## Analytics
 
-Leave all IDs empty to keep analytics disabled. Set a real `NEXT_PUBLIC_GA_ID` and/or `NEXT_PUBLIC_VERCEL_ANALYTICS=true` to enable the optional consent control. Scripts load only after opt-in; the visitor can revoke consent. Query strings are stripped from Vercel events and the initial GA page location to avoid collecting planner text. Disable automatic history/page-view measurement in GA before enabling it, or implement a reviewed route tracking policy that always strips query strings. Confirm provider disclosures and retention choices before public launch.
+Analytics are off unless configured **and** accepted by the visitor. Supported conversion events: `start_project_clicked`, `contact_started`, `contact_submitted`, `planner_started`, `planner_completed`, `case_study_viewed`, `product_viewed`, `industry_selected`. Planner completion means provider-accepted delivery. Event parameters are restricted to an optional known industry; no freeform data, names, email, phone, message or planner answers are passed.
 
-## Vercel deployment and custom domain
+Google automatic pageviews are disabled; explicit events use a clean root URL. Disable Enhanced Measurement/form interaction collection in the GA property when configuring it. Vercel pageview URLs have query strings and fragments removed. Rejecting/revoking consent prevents analytics loading after reload. Neither provider is configured in this repository.
 
-Import this repository in Vercel, choose the Next.js framework preset and use the repository root. Install with `npm ci`, build with `npm run build`. Configure the production domain and required environment variables before the public build. Preview deployments should remain access-protected and retain the production canonical origin. Use a separate test delivery endpoint for staging.
+See `docs/PRODUCTION-REPORT.md` and `docs/SCREENSHOT-REVIEW.md` for validation evidence, asset decisions and the remaining launch inputs.
 
-Add the verified custom domain under the project’s domain settings and follow the exact DNS records Vercel provides. Confirm HTTPS, canonical metadata, sitemap, robots, form delivery and error states on the final origin. Do not replace the App Router with a client-only SPA or a static export: the lead API requires the Next.js runtime.
+## Control Center leads integration
 
-No remote deployment is configured in this checkout. The requested native Next.js server and lead endpoint are prepared for Vercel; the Sites Vinext starter was not substituted for the explicitly requested stack.
+See [setup, API contract, tests and production configuration](docs/CONTROL-CENTER-INTEGRATION.md). The website and Control Center remain independently built and deployed.
 
-## Before going public
+## Multi-industry content and inquiries
 
-Supply the domain, contact details and configured delivery service. Review the legal notices with the verified business details, providers and retention requirements. Replace project/product placeholders only with approved information. Publish reviewed articles with real authors/dates. Configure production spam controls and verify delivery end to end. No actual email/CRM credentials, real customer screenshots or final domain were provided for this initial build.
+See [the expansion report](docs/MULTI-INDUSTRY-EXPANSION.md) for routes, changed files, validation and remaining owner checks. Eleven industries share one page template. `data/industry-types.ts` defines the content shape; `data/industries.ts` preserves the existing industries and combines the six additions from `data/industry-expansion.ts`. New offerings describe custom capabilities, not released products or completed client projects.
 
-The CSS includes reduced-motion support, touch layouts, visible focus, keyboard menus, semantic headings and responsive diagrams. Keep the development server alive while reviewing locally; use a production server for performance measurements. This build makes no unmeasured Lighthouse or Core Web Vitals claims.
+`data/industry-options.ts` supplies the contact and Project Planner options and the mapping to the existing Control Center v1 contract. Restaurants, hotels, education, healthcare and logistics submit as `Other`; supermarkets submit as `Retail`. The exact selected label is retained at the start of the project description. Client and server validation reserve space for that label within the receiver's 3,000-character limit. Existing categories and the authenticated receipt/idempotency contract remain unchanged. Distinct new industry filters in Control Center would require a separate coordinated change.

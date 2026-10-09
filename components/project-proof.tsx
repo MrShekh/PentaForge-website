@@ -1,0 +1,4 @@
+import { caseStudies } from '@/data/caseStudies';
+import { CaseStudyCard } from '@/components/cards';
+import { SectionHeading } from '@/components/ui';
+export function ProjectProof({ jewellery = false }: { jewellery?: boolean }) { return <section className="container section"><SectionHeading label="Built by PentaForge" title={jewellery ? "Software we’ve engineered for jewellery businesses." : 'See the workflow in real software.'} text={jewellery ? 'Explore the manufacturing, polishing and billing systems we built around actual business workflows.' : 'Our jewellery manufacturing system brings stock, casting and recovery into one working environment.'} /><div className="case-grid">{caseStudies.slice(0, jewellery ? 3 : 1).map((s, i) => <CaseStudyCard key={s.slug} study={s} index={i} />)}</div></section>; }
