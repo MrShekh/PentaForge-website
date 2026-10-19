@@ -1,6 +1,8 @@
 import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { publicRoutes } from '../lib/routes';
+import { articles } from '../data/articles';
+import { demoRoutes } from '../data/school-demos';
 async function main() {
 const domain = process.env.TEST_SITE_URL;
 if (!domain) throw new Error('Set TEST_SITE_URL to the NEXT_PUBLIC_SITE_URL used for this production build.');
@@ -25,10 +27,22 @@ for (const route of publicRoutes) {
 assert.equal(new Set(pages.map(p=>p.title)).size,pages.length,'Unique titles');
 assert.equal(new Set(pages.map(p=>p.description)).size,pages.length,'Unique descriptions');
 const sitemap=await fs.readFile('.next/server/app/sitemap.xml.body','utf8');
-assert.equal((sitemap.match(/<loc>/g)||[]).length,publicRoutes.length);
-assert.ok(!sitemap.includes('custom-business-software-cost'));
+assert.ok(sitemap.startsWith('<?xml version="1.0" encoding="UTF-8"?>'));
+assert.ok(sitemap.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'));
+const sitemapUrls=[...sitemap.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*<\/url>/g)].map(match=>match[1]);
+assert.ok(sitemapUrls.length>0,'Production sitemap must never be empty');
+assert.deepEqual(sitemapUrls,publicRoutes.map(path=>new URL(path,domain).href));
+assert.equal(new Set(sitemapUrls).size,sitemapUrls.length);
+for(const url of sitemapUrls) assert.equal(new URL(url).origin,'https://www.pentaforge.co.in');
+for(const article of articles.filter(a=>a.status==='draft')) assert.ok(!sitemapUrls.includes(`${domain}/insights/${article.slug}`));
+for(const route of demoRoutes){
+ const html=await fs.readFile(`.next/server/app${route}.html`,'utf8');
+ assert.ok(html.includes('content="noindex, follow"'),`${route}: demo must stay noindex`);
+ assert.ok(!sitemapUrls.includes(domain+route),`${route}: noindex pages must not enter sitemap`);
+}
 const robots=await fs.readFile('.next/server/app/robots.txt.body','utf8');
 assert.ok(robots.includes(`Sitemap: ${domain}/sitemap.xml`));
+await fs.mkdir('test-results',{recursive:true});
 await fs.writeFile('test-results/seo-configured.json',JSON.stringify({domain,passed:true,pages,sitemapEntries:publicRoutes.length},null,2));
 console.log(`Verified rendered metadata, canonicals, share images, schema, H1s and indexability for ${pages.length} pages; sitemap and robots passed.`);
 }

@@ -11,7 +11,7 @@ import { ProductCard, CaseStudyCard } from '@/components/cards';
 import { pageMetadata } from '@/lib/seo';
 import { absoluteUrl } from '@/config/site';
 export const dynamicParams = true;
-export function generateStaticParams() { return industries.map(i => ({ slug: i.slug })); }
+export function generateStaticParams() { return industries.filter(i => i.slug !== 'education').map(i => ({ slug: i.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) { const { slug } = await params; const item = industries.find(i => i.slug === slug); return item ? pageMetadata(item.seoTitle, item.summary, `/industries/${slug}`) : {}; }
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
  const { slug } = await params;

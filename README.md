@@ -25,7 +25,9 @@ After a build with the real `NEXT_PUBLIC_SITE_URL`, set `TEST_SITE_URL` to that 
 
 ## Architecture
 
-- `app/`: server-rendered public routes, static generation, metadata routes, OG image routes and lead API.
+- `app/(marketing)/`: the existing PentaForge website and its root layout, with unchanged public URLs.
+- `app/(school-demos)/`: an isolated root layout and all 28 fictional school demo routes; no PentaForge navigation/style leakage.
+- `app/api/`, `app/og/`, `app/sitemap.ts`, `app/robots.ts`: existing API and metadata endpoints.
 - `data/`: services, industries, products, case studies, articles and screenshot metadata.
 - `components/`: navigation, reusable sections, cards, workflows, accessible screenshot dialog and forms.
 - `config/site.ts`: canonical origin, public contact channels and social links.
@@ -38,7 +40,7 @@ Copy `.env.example` to `.env.local` for development. Configure environment varia
 
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Final HTTPS canonical origin; all canonical, sitemap, OG and schema URLs derive from it. |
+| `NEXT_PUBLIC_SITE_URL` | Set to `https://www.pentaforge.co.in` in Vercel Production. Production also uses this confirmed origin when blank. |
 | `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_CONTACT_PHONE` | Visible email/phone links. They do not configure form delivery. |
 | `NEXT_PUBLIC_LINKEDIN_URL`, `NEXT_PUBLIC_INSTAGRAM_URL`, `NEXT_PUBLIC_GITHUB_URL` | Optional real HTTPS social links; blank values remain hidden. |
 | `LEAD_WEBHOOK_URL` | Server-only HTTPS endpoint accepting validated inquiry JSON. |
@@ -48,7 +50,7 @@ Copy `.env.example` to `.env.local` for development. Configure environment varia
 | `NEXT_PUBLIC_VERCEL_ANALYTICS` | Set `true` to enable consent-gated Vercel Analytics. |
 | `GOOGLE_SITE_VERIFICATION` | Search Console verification token. |
 
-No final domain or real contact/provider details are present. With no canonical origin, pages are `noindex, follow`, the sitemap has no URL entries, and absolute canonical/OG URLs are omitted. This avoids baking a guessed or temporary domain into the website. Setting the final origin and rebuilding enables indexable pages and complete metadata. Do not put secrets in `NEXT_PUBLIC_*` variables.
+The official canonical origin is `https://www.pentaforge.co.in`. Production builds use it even when `NEXT_PUBLIC_SITE_URL` is missing or blank; a different configured origin fails validation. Vercel Preview/Development builds stay `noindex, follow`, omit canonical/share URLs and sitemap entries, and disallow crawling even if they inherit the production URL. Keep Vercel's System Environment Variables enabled: `VERCEL_ENV` controls this distinction, since both preview and production builds have `NODE_ENV=production`. Do not override `VERCEL_ENV`. Local development stays noindex; a standalone production build uses the official origin. Rebuild after configuration changes. Do not put secrets in `NEXT_PUBLIC_*` variables. See [the sitemap diagnosis and verification report](docs/SITEMAP-FIX.md).
 
 ## Vercel and the custom domain
 
@@ -95,3 +97,11 @@ See [setup, API contract, tests and production configuration](docs/CONTROL-CENTE
 See [the expansion report](docs/MULTI-INDUSTRY-EXPANSION.md) for routes, changed files, validation and remaining owner checks. Eleven industries share one page template. `data/industry-types.ts` defines the content shape; `data/industries.ts` preserves the existing industries and combines the six additions from `data/industry-expansion.ts`. New offerings describe custom capabilities, not released products or completed client projects.
 
 `data/industry-options.ts` supplies the contact and Project Planner options and the mapping to the existing Control Center v1 contract. Restaurants, hotels, education, healthcare and logistics submit as `Other`; supermarkets submit as `Retail`. The exact selected label is retained at the start of the project description. Client and server validation reserve space for that label within the receiver's 3,000-character limit. Existing categories and the authenticated receipt/idempotency contract remain unchanged. Distinct new industry filters in Control Center would require a separate coordinated change.
+
+## School website collection
+
+Start at `/industries/education`. The three complete fictional demonstrations are `/demos/littlebloom`, `/demos/horizon` and `/demos/nextgen`. NextGen includes student and parent portal previews with sample data only. Read [the school collection guide](docs/SCHOOL-DEMO-COLLECTION.md) for all routes, customization, photography licenses, screenshots, browser checks and deployment notes.
+
+School demo admission forms simulate submissions without sending or saving personal information. The separate PentaForge education enquiry uses the existing secured lead workflow, retaining the allowlisted selected demo, city and required service in the validated description. Demo routes are always noindex and excluded from the marketing sitemap. The education service page uses the existing production-origin indexing and canonical configuration.
+
+No new runtime dependencies are required. `scripts/verify-school-demos.cjs` runs with Playwright supplied by a local testing environment; set `PLAYWRIGHT_MODULE` to its installed module path if it is not on Node's module search path. Run with `node --import tsx scripts/verify-school-demos.cjs` and `TEST_BASE_URL` set to your local production server. It launches headless Edge, tests interfaces, captures six real preview screenshots and mocks the real lead endpoint so no test lead is delivered.

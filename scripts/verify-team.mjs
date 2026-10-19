@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+const base = process.env.TEST_BASE_URL || 'http://localhost:3010';
+const members = ['asif', 'kavya', 'abhishek'];
+const response = await fetch(new URL('/company', base));
+assert.equal(response.status, 200);
+const company = await response.text();
+assert.ok(company.includes('id="team"'));
+assert.ok(company.includes('Meet the team.'));
+assert.ok(company.includes('aria-roledescription="carousel"'));
+assert.ok(company.includes('aria-live="polite"'));
+assert.ok(company.includes('Previous team member') && company.includes('Next team member'));
+assert.equal((company.match(/aria-label="Show [^"]+"/g) || []).length, members.length);
+assert.ok(!/Poonam|Mrunal|poonam\.webp|mrunal\.webp/.test(company));
+assert.ok(company.includes('Show Abhishek Vishwakarma, Security &amp; Backend Development'));
+assert.ok(company.includes('Full-Stack Development'));
+assert.ok(company.includes('translateZ(48px)'));
+assert.ok(company.includes('rotateY(22deg)') && company.includes('rotateY(-22deg)'));
+const home = await (await fetch(new URL('/', base))).text();
+assert.ok(home.includes('href="/company#team"'));
+assert.ok(home.includes('Meet your team at PentaForge.'));
+assert.ok(!/poonam\.webp|mrunal\.webp/.test(home));
+assert.ok(!home.includes('aria-roledescription="carousel"'), 'Homepage remains a compact static preview');
+for (const member of members) {
+  const image = await fetch(new URL(`/team/${member}.webp`, base));
+  assert.equal(image.status, 200);
+  assert.ok(image.headers.get('content-type').includes('image/webp'));
+  const optimized = await fetch(new URL(`/_next/image?url=%2Fteam%2F${member}.webp&w=640&q=75`, base));
+  assert.equal(optimized.status, 200);
+  assert.ok(optimized.headers.get('content-type').startsWith('image/'));
+}
+await fs.mkdir('test-results', { recursive: true });
+const report = { passed: true, company: '200; carousel, controls, active information and initial 3D transforms present', homepage: '200; compact preview and team anchor present', portraits: members.length, optimizedImageResponses: members.length, scope: 'HTTP/rendered HTML audit; not interactive browser or visual QA', checkedAt: new Date().toISOString() };
+await fs.writeFile('test-results/team.json', JSON.stringify(report, null, 2));
+console.log(JSON.stringify(report, null, 2));

@@ -22,13 +22,14 @@ test('all four projects have real, dimensioned, local screenshots; raw folders a
 });
 test('problem text handoff is bounded and consumed once', () => { setBrief('x'.repeat(3000)); assert.equal(takeBrief().length, 2000); assert.equal(takeBrief(), ''); });
 test('configured canonical, sitemap and share image use one explicit domain', async () => {
- process.env.NEXT_PUBLIC_SITE_URL = 'https://production-test.invalid';
+ process.env.NEXT_PUBLIC_SITE_URL = 'https://www.pentaforge.co.in';
+ process.env.VERCEL_ENV = 'production';
  const { pageMetadata } = await import('../lib/seo');
  const { default: sitemap } = await import('../app/sitemap');
  const { default: robots } = await import('../app/robots');
- for (const path of publicRoutes) { const metadata = pageMetadata('Route test', 'Description', path); assert.equal(metadata.alternates?.canonical, `https://production-test.invalid${path}`); assert.ok(JSON.stringify(metadata.openGraph).includes('https://production-test.invalid/og/')); }
+ for (const path of publicRoutes) { const metadata = pageMetadata('Route test', 'Description', path); assert.equal(metadata.alternates?.canonical, `https://www.pentaforge.co.in${path}`); assert.ok(JSON.stringify(metadata.openGraph).includes('https://www.pentaforge.co.in/og/')); }
  assert.equal(sitemap().length, publicRoutes.length);
- assert.equal(robots().sitemap, 'https://production-test.invalid/sitemap.xml');
+ assert.equal(robots().sitemap, 'https://www.pentaforge.co.in/sitemap.xml');
 });
 test('webhook delivers the complete planner payload and rejects provider failures', async () => {
  const originalFetch = globalThis.fetch, originalUrl = process.env.LEAD_WEBHOOK_URL, originalToken = process.env.LEAD_WEBHOOK_TOKEN;
