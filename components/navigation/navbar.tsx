@@ -1,10 +1,11 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu, X } from 'lucide-react';
 import type { navigation as NavigationData } from '@/data/navigation';
-export function Brand() { return <Link href="/" className="brand" aria-label="PentaForge home"><svg width="30" height="30" viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M4 30V6h28v7H12v5h15v7H12v5H4Z" fill="currentColor"/><path d="M25 30h7v-7l-7 7Z" fill="currentColor"/></svg><span>PENTAFORGE</span></Link>; }
+export function Brand() { return <Link href="/" className="brand" aria-label="PentaForge home"><Image src="/pentaforge-logo-color.svg" alt="PentaForge" width={143} height={32} priority style={{ height: '32px', width: 'auto', display: 'block' }} /></Link>; }
 export function Navbar({ navigation }: { navigation: typeof NavigationData }) {
  const [open, setOpen] = useState<string | null>(null); const [mobile, setMobile] = useState(false); const [scrolled, setScrolled] = useState(false);
  const header = useRef<HTMLElement>(null); const menuButton = useRef<HTMLButtonElement>(null); const pathname = usePathname();
