@@ -1,4 +1,7 @@
-export interface ArticleSection { id: string; title: string; paragraphs: string[] }
+import { grams, gramsNumber, karatComparisonRows, weightChain, weightChainNet, weightChainFine, purityImpact, purityImpactFromTouch, purityImpactFromKarat, workInProgressJob, confirmedLossMilligrams, workInProgressRows, workInProgressCheck } from './jewellery-examples';
+export interface ArticleTable { caption: string; headers: string[]; rows: string[][]; note?: string }
+export interface ArticleLink { href: string; label: string }
+export interface ArticleSection { id: string; title: string; paragraphs: string[]; table?: ArticleTable; links?: ArticleLink[] }
 export interface Article { slug: string; title: string; summary: string; category: string; status: 'draft' | 'published'; author?: string; publishedAt?: string; relatedService: string; relatedIndustry?: string; sections: ArticleSection[] }
 export const articles: Article[] = [
   {
@@ -43,11 +46,51 @@ export const articles: Article[] = [
         ]
       },
       {
+        "id": "order-walkthrough",
+        "title": "What does one order look like from first record to settlement?",
+        "paragraphs": [
+          "An order can be followed through seven kinds of record: the customer order, material allocation, casting or another first production stage, karigar issue and receive, production tracking, recovery and reconciliation, and billing or settlement. The table is a representative workflow, not a specification. Your stages, names and sequence will differ, and some workshops will skip or combine steps.",
+          "The right-hand column points to the published screens that relate to each stage. Those screens come from separate systems and were captured with private values concealed. They show where each kind of record lives. They do not show one order carried through all seven stages, and we are not describing a live end-to-end transaction."
+        ],
+        "table": {
+          "caption": "A representative order workflow and the published screens related to each stage",
+          "headers": ["Stage", "What the workflow needs to record", "Related published screen"],
+          "rows": [
+            ["1. Customer order", "The customer, the agreed specification and the expected handover.", "Operations system: production register with order name and bag reference columns."],
+            ["2. Material allocation", "Fine gold set aside from stock for the job, with its purity.", "Manufacturing control centre: available fine stock. Operations system: stock page with add and remove gold controls."],
+            ["3. Casting or first stage", "Batch, purity, fine gold issued, expected and actual output.", "Manufacturing system: casting register with batch, karat, fine issued, expected gross, actual output, fine loss and status columns."],
+            ["4. Karigar issue and receive", "What went out, what came back, who held it and when.", "Operations system: filling-in and finish weight columns; the dashboard separates material with a karigar from admin stock."],
+            ["5. Production tracking", "Where the job stands and what material is still in work.", "Manufacturing system: work in progress on the control centre, and casting and order work-in-progress accounts in the reports ledger."],
+            ["6. Recovery and reconciliation", "Scrap and dust returned, customer metal settled, differences explained.", "Manufacturing system: separate registers for customer gold settlements and karigar bench scrap recoveries."],
+            ["7. Billing or settlement", "Charges, cash and fine-gold balances for the customer.", "Billing system: bill form with issue and receive lines and separate cash and fine-gold balance sections."]
+          ],
+          "note": "Stages 1 to 7 are a teaching sequence. Each published screen is a separate capture with values concealed, so none of them traces the same order."
+        },
+        "links": [
+          { "href": "/work/jewellery-manufacturing-system", "label": "Manufacturing system case study" },
+          { "href": "/work/jewellery-operations-system", "label": "Operations and stock case study" },
+          { "href": "/work/custom-billing-system", "label": "Billing system case study" }
+        ]
+      },
+      {
         "id": "read-the-dashboard",
         "title": "Read stock as a set of positions",
         "paragraphs": [
           "In the manufacturing system built by PentaForge, the dashboard separates available fine gold, factory work in progress, customer receivables and karigar recovery. Each heading answers a different question. Material can be present in the business without being available to issue to the next job.",
           "A useful review starts with one position and follows it to its register. For casting, that means checking the batch, purity, fine gold issued, expected gross output and completion state. For recovery, it means distinguishing a customer settlement from scrap returned by a karigar. Putting everything into one total hides the explanation the workshop needs."
+        ]
+      },
+      {
+        "id": "exceptions-in-practice",
+        "title": "What happens when an order does not go to plan?",
+        "paragraphs": [
+          "The workflow should make an exception visible instead of absorbing it. Five situations deserve a defined path: a partial return, a corrected weight, rework, material still with a worker, and two purity conventions meeting in one job.",
+          "After a partial return, the remainder stays attached to the same order and the same worker, so the difference is a visible balance and not something people have to remember. A corrected weight should say which entry it replaces and why. Rework sends a piece back into work in progress; link it to the original order so the extra handling does not look like a second job.",
+          "Gold still with a worker at the end of a day is a position, not a discrepancy. Purity needs the same care: if two parts of the business convert the same alloy at different touch values, one job produces two fine-gold totals. The gold-loss guide works through both ideas with labelled hypothetical figures."
+        ],
+        "links": [
+          { "href": "/insights/track-gold-loss-jewellery-manufacturing#wip-not-loss", "label": "Is work-in-progress gold a loss?" },
+          { "href": "/insights/track-gold-loss-jewellery-manufacturing#fine-gold-calculation", "label": "How fine gold is calculated" }
         ]
       },
       {
@@ -65,7 +108,7 @@ export const articles: Article[] = [
   {
     "slug": "track-gold-loss-jewellery-manufacturing",
     "title": "How Gold Loss and Recovery Are Tracked in Jewellery Manufacturing",
-    "summary": "A workflow-first approach to issue weights, returns, recovery and accountable adjustments.",
+    "summary": "How gross weight, touch and fine gold, work in progress and recovery fit together in jewellery manufacturing, with labelled hypothetical examples.",
     "category": "Jewellery",
     "status": "published",
     "relatedService": "custom-software",
@@ -80,11 +123,55 @@ export const articles: Article[] = [
         ]
       },
       {
+        "id": "gross-and-fine",
+        "title": "What is the difference between gross weight and fine gold?",
+        "paragraphs": [
+          "A weight without a unit and purity is incomplete. Gross weight describes the measured material; a fine-weight figure expresses its gold content under the agreed touch calculation. Comparing unlike quantities can create a difference that looks like loss even when the underlying records simply use different bases.",
+          "The PentaForge operations interface places karat-weight and fine-weight columns side by side in production analytics. The manufacturing interface also provides purity settings. These are useful places to make assumptions visible. A software setting still needs the business to approve its units, rounding and applicable purity rules."
+        ]
+      },
+      {
+        "id": "fine-gold-calculation",
+        "title": "How is fine gold calculated in jewellery billing?",
+        "paragraphs": [
+          "Fine gold is the pure-gold content of a quantity of metal: the net weight multiplied by the touch (purity) percentage and divided by 100. The result is only as reliable as its inputs, and each input is an agreement between the business and its customers, so write the convention down before it is built into software.",
+          `Start with the measured gross weight and subtract the deductions your business agrees to exclude, such as stone weight, to reach net weight. Apply the touch to the net weight to get fine gold. With ${grams(weightChain.grossMilligrams)} gross and ${grams(weightChain.deductionsMilligrams)} of agreed deductions, the net weight is ${grams(weightChainNet())}; at a touch of ${weightChain.touchPercent}% that net weight holds ${grams(weightChainFine())} of fine gold (${gramsNumber(weightChainNet())} × ${weightChain.touchPercent} ÷ 100). This is a hypothetical illustration of the definitions, not a description of how any particular bill is calculated.`,
+          "PentaForge’s billing system gives each issue and receive line gross, deduction and net-weight fields alongside touch, rate and fine-gold fields, with separate cash and fine-gold balance sections. The published screen is an empty bill form: it shows that layout, not a worked calculation, and it does not prove a particular formula or rounding rule.",
+          "Making charges are a separate agreement from purity. Businesses fix them per gram, per piece, as a percentage or in another agreed way, and that choice decides which ledger carries the charge. State whether a charge is billed in cash, in fine gold or both, how many decimals each figure keeps and when rounding happens.",
+          `Purity is a convention too. The table compares simple karat arithmetic (karat divided by 24) with the default touch values on the purity settings screen of PentaForge’s manufacturing system, where they are configurable. On a hypothetical ${grams(purityImpact.netMilligrams)} of net 22K metal, a touch of ${purityImpact.defaultTouch}% gives ${grams(purityImpactFromTouch())} of fine gold, while 22 ÷ 24 gives ${grams(purityImpactFromKarat())}: a ${grams(purityImpactFromKarat() - purityImpactFromTouch())} gap that appears on every bill unless the business picks one convention and applies it consistently.`
+        ],
+        "table": {
+          "caption": "Karat arithmetic compared with the default touch values on a published purity settings screen",
+          "headers": ["Karat", "Karat ÷ 24", "Default touch shown"],
+          "rows": karatComparisonRows(),
+          "note": "Default touch values are as displayed on the purity settings screen in the manufacturing case study. They are configurable settings, not a universal standard."
+        },
+        "links": [
+          { "href": "/work/custom-billing-system", "label": "See the billing interface" },
+          { "href": "/work/jewellery-manufacturing-system", "label": "See the purity settings" }
+        ]
+      },
+      {
+        "id": "charges-and-loss",
+        "title": "Is a making charge the same as gold loss?",
+        "paragraphs": [
+          "No. Weight loss, financial charges, billing liability and stock movements are four different records, and software that merges them makes every balance harder to explain. Weight loss is metal that was issued and not returned or recovered. A making charge is an agreed payment for work. A billing liability is what a customer owes, in cash, in metal or both. A stock movement records where physical metal went.",
+          "Even when an agreed charge is expressed as a weight, it remains a billing figure until the records show that metal changed hands. Whether it also becomes a stock movement, and in which ledger, is a separate decision the business has to make and document. PentaForge’s published systems keep these figures apart: the operations dashboard shows karigar loss and manual making charge as separate cards, and the manufacturing reports list making-charge revenue separately from billed fine gold."
+        ],
+        "links": [
+          { "href": "/work/jewellery-operations-system", "label": "Operations dashboard evidence" },
+          { "href": "/work/jewellery-manufacturing-system", "label": "Manufacturing reports evidence" }
+        ]
+      },
+      {
         "id": "record-handoffs",
-        "title": "Record each handoff",
+        "title": "How should jewellery software track gold issued to karigars?",
         "paragraphs": [
           "Link every issue and return to an order, process and responsible person. Record when the handoff occurred and who checked it.",
           "A correction should retain the original entry and its reason. Quietly overwriting a number removes the evidence needed to understand a later difference."
+        ],
+        "links": [
+          { "href": "/work/jewellery-operations-system", "label": "Production register in the operations case study" }
         ]
       },
       {
@@ -96,19 +183,30 @@ export const articles: Article[] = [
         ]
       },
       {
+        "id": "wip-not-loss",
+        "title": "Is work-in-progress gold considered loss?",
+        "paragraphs": [
+          "No. Gold still with a karigar is a position to be tracked, not a loss to be written off. A loss is a conclusion you can draw only after finished work, recoverable scrap and work still in progress have all been accounted for. In the operations system PentaForge built, the dashboard describes material given to a karigar as “given out, not yet finished — moved from Admin Stock, not lost”, and shows karigar loss separately as the realised loss on completed orders (filling-in weight minus finish weight).",
+          `The table follows one hypothetical job in fine gold only, so no gross weight is added to a fine total. It assumes one touch convention for every conversion, scrap awaiting refining counted as recoverable rather than lost, loss confirmed only once finished work and refined recovery are both known, and no wastage allowance or customer-owned metal. Mid-job, ${grams(workInProgressJob.stages[0].inProgressMilligrams)} is still in progress and ${grams(workInProgressJob.stages[0].scrapEstimatedMilligrams)} of scrap awaits refining, yet nothing is confirmed as loss. After completion and refining, ${grams(confirmedLossMilligrams(workInProgressJob.stages[1]))} is the only remainder left unexplained.`,
+          "Ledgers classify these balances differently, so this is not a universal formula. When refined scrap returns to stock, and who bears a confirmed loss (the workshop, the karigar or the customer), depend on the agreement. The software should show each position separately instead of collapsing them into one total."
+        ],
+        "table": {
+          "caption": "Hypothetical job in fine gold: where each gram sits before and after completion",
+          "headers": ["Position (fine gold)", "Mid-job", "After completion and refining"],
+          "rows": workInProgressRows(),
+          "note": `${workInProgressCheck()} Illustrative figures only; not client data.`
+        },
+        "links": [
+          { "href": "/work/jewellery-operations-system", "label": "Stock by state in the operations case study" },
+          { "href": "/work/jewellery-manufacturing-system", "label": "Recovery registers in the manufacturing case study" }
+        ]
+      },
+      {
         "id": "design-system",
         "title": "Build the checks into the workflow",
         "paragraphs": [
           "Use required references, reasonable input checks and review steps to catch missing information close to the point of entry.",
           "Validate the software against real examples supplied by the business. Include unusual jobs and corrections, not just straightforward completed orders."
-        ]
-      },
-      {
-        "id": "gross-and-fine",
-        "title": "Keep gross weight and fine weight distinct",
-        "paragraphs": [
-          "A weight without a unit and purity is incomplete. Gross weight describes the measured material; a fine-weight figure expresses its gold content under the agreed touch calculation. Comparing unlike quantities can create a difference that looks like loss even when the underlying records simply use different bases.",
-          "The PentaForge operations interface places karat-weight and fine-weight columns side by side in production analytics. The manufacturing interface also provides purity settings. These are useful places to make assumptions visible. A software setting still needs the business to approve its units, rounding and applicable purity rules."
         ]
       },
       {
@@ -121,10 +219,24 @@ export const articles: Article[] = [
       },
       {
         "id": "polishing-rules",
-        "title": "Use process-specific calculations",
+        "title": "How is polishing loss recorded?",
         "paragraphs": [
           "Polishing records may track two passes, making charges, loss and touch on the same order. The supplied polishing workflow expresses loss as weight in minus weight out minus making charge. That only makes sense with the units and charge convention used by that workflow; a cash charge cannot simply be subtracted from a weight.",
           "Write down the rule in everyday language and check it against approved jobs, including partial returns and corrections. Keep loss, recovery and customer settlement as separate questions. This makes the resulting fine total explainable without assuming that every workshop uses the same calculation."
+        ],
+        "links": [
+          { "href": "/work/jewellery-polishing-management", "label": "Polishing management case study" }
+        ]
+      },
+      {
+        "id": "choose-software",
+        "title": "What should a jewellery manufacturer check before choosing software?",
+        "paragraphs": [
+          "Check that the software makes your conventions visible and lets you test them on your own jobs. Five checks cover most of the risk: can you see and change the purity values it uses; can you follow a bill from gross weight through deductions and net weight to fine gold; are customer settlements, scrap recovery and work in progress kept in separate places; does a corrected weight keep the original entry and its reason; and does it reproduce the results of a few completed jobs, including the awkward ones?",
+          "Ask for the demonstration to use your examples rather than the supplier’s, and write down the answers: units, decimals, rounding, purity values and who may adjust a record. Software that cannot show its assumptions cannot be checked, whoever built it. The settings screens and registers in our case studies are there to make assumptions visible, but each business still has to approve its own."
+        ],
+        "links": [
+          { "href": "/insights/custom-software-vs-ready-made", "label": "Custom or ready-made software?" }
         ]
       }
     ],
