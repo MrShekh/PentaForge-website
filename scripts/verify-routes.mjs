@@ -6,6 +6,13 @@ while (queue.length) {
  const path = queue.shift(); if (seen.has(path)) continue; seen.add(path);
  const response = await fetch(new URL(path, base), { headers: { 'User-Agent': 'Googlebot' } }); const html = await response.text(); htmlByRoute.set(path, html);
  if (response.status !== 200) { errors.push(`${path}: HTTP ${response.status}`); continue; }
+ // A linked web manifest is a JSON resource, not an HTML page with headings/metadata.
+ if (path === '/site.webmanifest') {
+  if (!response.headers.get('content-type')?.includes('json')) errors.push(`${path}: expected a JSON manifest`);
+  try { const manifest = JSON.parse(html); if (!manifest.name || !Array.isArray(manifest.icons)) errors.push(`${path}: missing manifest identity/icons`); }
+  catch { errors.push(`${path}: invalid manifest JSON`); }
+  continue;
+ }
  const title = html.match(/<title>(.*?)<\/title>/s)?.[1]; if (!title) errors.push(`${path}: missing title`); else if (titles.has(title)) errors.push(`${path}: duplicate title with ${titles.get(title)}`); else titles.set(title, path);
  if ((html.match(/<h1[ >]/g) || []).length !== 1) errors.push(`${path}: expected one H1`);
  for (const name of ['description', 'og:title', 'og:description', 'twitter:title']) if (!html.includes(`"${name}"`)) errors.push(`${path}: missing ${name}`);

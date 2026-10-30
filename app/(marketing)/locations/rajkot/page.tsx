@@ -20,7 +20,7 @@ export default function RajkotLocationPage() {
         <Breadcrumbs items={[{ label: 'Rajkot Software Development', href: '/locations/rajkot' }]} />
         <Label>Software Development in Rajkot</Label>
         <h1>Custom Software Development in Rajkot</h1>
-        <p>PentaForge builds custom business software, ERP systems and digital applications for businesses in Rajkot, helping teams manage the workflows, calculations and operations that generic software cannot easily accommodate.</p>
+        <p>PentaForge builds custom business software, ERP systems and digital applications for businesses in Rajkot, helping teams manage workflows, calculations and operations around their specific requirements.</p>
         <div className="button-row" style={{ marginTop: 32 }}>
           <ButtonLink href="/contact">Discuss Your Project</ButtonLink>
           <ButtonLink href="/work" secondary>Explore Our Work</ButtonLink>
@@ -30,7 +30,7 @@ export default function RajkotLocationPage() {
       <section className="container section detail-intro">
         <div className="editorial-label">Built around your workflow.</div>
         <p className="large-copy">
-          Off-the-shelf software forces growing businesses into rigid templates. We engineer custom software around how your team, records and calculations actually operate in Rajkot.
+          Ready-made software can be a good fit for standard workflows. When important rules remain unsupported, we can engineer custom software around how your team, records and calculations operate in Rajkot.
         </p>
       </section>
 
@@ -38,38 +38,38 @@ export default function RajkotLocationPage() {
         <SectionHeading
           label="Custom Software Capabilities"
           title="Software engineered for your operational reality."
-          text="We build custom systems around your team, daily handoffs and specific business rules, distinct from prepackaged generic software."
+          text="These are capabilities we can scope around your team, daily handoffs and business rules. Modules, integrations and controls are agreed for each project; not every system includes every capability below."
         />
         <div className="feature-grid">
           <article>
             <span className="eyebrow">01 / Orders & Customers</span>
             <h3>Orders and customer records</h3>
-            <p>Centralize customer histories, order specifications, advance deposits and production status in a single shared record, eliminating duplicate entries across notebooks and loose papers.</p>
+            <p>Connect customer histories, order specifications, advance deposits and production status to reduce repeated record entry. We agree which records belong in your first release.</p>
           </article>
           <article>
             <span className="eyebrow">02 / Stock & Inventory</span>
             <h3>Inventory and stock management</h3>
-            <p>Track raw materials, active work in progress, location transfers and finished goods with real-time balance calculations, automated audit trails and variance reconciliation.</p>
+            <p>Scope records for raw materials, work in progress, transfers and finished goods. Balance updates, audit history and reconciliation checks are defined and validated for your workflow.</p>
           </article>
           <article>
             <span className="eyebrow">03 / Billing & Calculations</span>
             <h3>Billing and custom calculations</h3>
-            <p>Incorporate your specific pricing formulas, tiered discounts, precious metal touch conversions, making charges and dual currency/metal ledgers with exact mathematical precision.</p>
+            <p>Define pricing, discounts, precious metal touch conversions, making charges and cash/metal ledgers around your requirements. Agree units and rounding, then validate calculations against approved examples.</p>
           </article>
           <article>
             <span className="eyebrow">04 / Manufacturing & Workflows</span>
             <h3>Production and workshop workflows</h3>
-            <p>Follow work from customer job bags through batching, artisan work allocation, multi-pass processing, quality review and scrap recovery with complete accountability.</p>
+            <p>Map the stages your workshop needs, such as job bags, casting, work allocation, polishing and recovery. The final records, handoffs and checks are agreed in the project scope.</p>
           </article>
           <article>
             <span className="eyebrow">05 / Operations & Controls</span>
             <h3>Multi-user operational controls</h3>
-            <p>Provide distinct workspaces for owners, floor managers, counter staff and accountants, backed by granular permission tiers, activity logs and automated daily closing summaries.</p>
+            <p>Discuss the access each role needs. Permissions, activity logs and automated closing summaries are options to scope and test, not guaranteed features of every system.</p>
           </article>
           <article>
             <span className="eyebrow">06 / Multi-Platform Engineering</span>
             <h3>Web, mobile and desktop applications</h3>
-            <p>Deploy secure cloud web applications, mobile tools for field teams, or fast desktop software for high-volume billing counters and workstation-connected hardware.</p>
+            <p>Choose web, mobile or desktop development to suit your users and devices. Deployment, security controls and any hardware connections are assessed and agreed for the project.</p>
           </article>
         </div>
       </section>
@@ -85,12 +85,12 @@ export default function RajkotLocationPage() {
             <article>
               <span className="eyebrow">Operational Challenge / 01</span>
               <h3>Records live across notebooks and spreadsheets</h3>
-              <p>When stock balances, pending orders and customer dues are maintained in separate files, staff spend hours copying data and rectifying conflicting totals instead of serving clients.</p>
+              <p>When stock balances, pending orders and customer dues are maintained in separate files, staff may spend time copying records and reconciling conflicting totals.</p>
             </article>
             <article>
               <span className="eyebrow">Operational Challenge / 02</span>
               <h3>Software cannot handle your exact calculation rules</h3>
-              <p>Standard software assumes standard formulas. If your business uses custom touch adjustments, multi-tier making charges, scrap loss ratios or trade deductions, standard software forces manual overrides.</p>
+              <p>Check whether your current software supports the touch adjustments, making charges, loss rules and deductions you use. Custom development may help when those rules still require manual workarounds.</p>
             </article>
             <article>
               <span className="eyebrow">Operational Challenge / 03</span>
@@ -145,7 +145,7 @@ export default function RajkotLocationPage() {
           <SectionHeading
             label="Working with PentaForge"
             title="Collaborating with Rajkot business owners."
-            text="We work closely with manufacturers, traders and service businesses in Rajkot, Ahmedabad and throughout Gujarat."
+            text="We offer custom software development for manufacturers, traders and service businesses in Rajkot, Ahmedabad and throughout Gujarat."
           />
           <div>
             <h3>Starting the conversation</h3>
@@ -165,7 +165,7 @@ export default function RajkotLocationPage() {
           items={[
             {
               question: 'Does PentaForge develop custom software for Rajkot businesses?',
-              answer: 'Yes. Rajkot is our primary customer-acquisition market. We build custom business software, ERP systems, billing software and operational management platforms for manufacturers, wholesalers and growing businesses in Rajkot, Ahmedabad and throughout Gujarat.'
+              answer: 'Yes. PentaForge serves Rajkot businesses with custom software development, including ERP, billing and operational systems. We start with your workflow and agree the capabilities your business needs.'
             },
             {
               question: 'Can you build software around our existing business calculations?',
@@ -173,11 +173,11 @@ export default function RajkotLocationPage() {
             },
             {
               question: 'Do you develop jewellery manufacturing and billing software?',
-              answer: 'Yes. We have proven experience developing dedicated jewellery software for manufacturing workflows, casting batches, karigar gold issue and recovery registers, multi-pass polishing loss tracking, and dual cash/metal customer billing ledgers.'
+              answer: 'Yes. We have proven experience developing dedicated jewellery software for manufacturing workflows, casting batches, karigar gold issue and recovery registers, two-pass polishing records, and separate cash and fine-gold customer billing ledgers.'
             },
             {
               question: 'Can you modernize a business currently using Excel or paper registers?',
-              answer: 'Yes. Many of our systems replace fragmented spreadsheets and manual registers. We map your current paper workflows, migrate opening balances, and design intuitive interfaces that your team can adopt comfortably without disrupting daily work.'
+              answer: 'Yes. We can map your existing workflows and scope a transition from Excel or paper records. Migration, opening-balance checks, training and rollout timing are agreed with your team to manage disruption; a disruption-free transition is not guaranteed.'
             },
             {
               question: 'How can we discuss a custom software project?',

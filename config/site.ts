@@ -24,6 +24,19 @@ export function resolveSiteUrl(env: IndexingEnvironment): string | undefined {
   return productionOrigin;
 }
 
+export function resolveSocialUrl(value: string | undefined, fallback?: string): string | undefined {
+  const candidate = value?.trim();
+  if (candidate && /^https:\/\//i.test(candidate)) {
+    try {
+      const url = new URL(candidate);
+      if (url.protocol === 'https:' && url.hostname && !url.username && !url.password) return url.href;
+    } catch {
+      // A missing or malformed optional override must not hide an approved profile.
+    }
+  }
+  return fallback;
+}
+
 export const site = {
   companyName: 'PentaForge',
   siteUrl: resolveSiteUrl({ NODE_ENV: process.env.NODE_ENV, VERCEL: process.env.VERCEL, VERCEL_ENV: process.env.VERCEL_ENV, NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL }),
@@ -31,9 +44,9 @@ export const site = {
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || '',
   socials: [
-    { label: 'LinkedIn', url: process.env.NEXT_PUBLIC_LINKEDIN_URL },
-    { label: 'Instagram', url: process.env.NEXT_PUBLIC_INSTAGRAM_URL },
-    { label: 'GitHub', url: process.env.NEXT_PUBLIC_GITHUB_URL },
-  ].filter((item): item is { label: string; url: string } => !!item.url && /^https:\/\//.test(item.url)),
+    { label: 'LinkedIn', url: resolveSocialUrl(process.env.NEXT_PUBLIC_LINKEDIN_URL, 'https://www.linkedin.com/company/pentaforge-official/') },
+    { label: 'Instagram', url: resolveSocialUrl(process.env.NEXT_PUBLIC_INSTAGRAM_URL, 'https://www.instagram.com/pentaforge.official/') },
+    { label: 'GitHub', url: resolveSocialUrl(process.env.NEXT_PUBLIC_GITHUB_URL) },
+  ].filter((item): item is { label: string; url: string } => !!item.url),
 };
 export const absoluteUrl = (path: string) => site.siteUrl ? new URL(path, site.siteUrl).toString() : undefined;
