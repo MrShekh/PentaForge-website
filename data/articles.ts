@@ -1,4 +1,10 @@
-import { grams, gramsNumber, karatComparisonRows, weightChain, weightChainNet, weightChainFine, purityImpact, purityImpactFromTouch, purityImpactFromKarat, workInProgressJob, confirmedLossMilligrams, workInProgressRows, workInProgressCheck } from './jewellery-examples';
+import {
+  approvedBillingExample, approvedCombinedRatePercent, approvedFineAtTouchMilligrams,
+  approvedMakingChargeMilligrams, approvedTotalBilledFineMilligrams,
+  grams, gramsNumber, karatComparisonRows, weightChain, weightChainNet, weightChainFine,
+  purityImpact, purityImpactFromTouch, purityImpactFromKarat, workInProgressJob,
+  confirmedLossMilligrams, workInProgressRows, workInProgressCheck
+} from './jewellery-examples';
 export interface ArticleTable { caption: string; headers: string[]; rows: string[][]; note?: string }
 export interface ArticleLink { href: string; label: string }
 export interface ArticleSection { id: string; title: string; paragraphs: string[]; table?: ArticleTable; links?: ArticleLink[] }
@@ -138,6 +144,16 @@ export const articles: Article[] = [
           `Start with the measured gross weight and subtract the deductions your business agrees to exclude, such as stone weight, to reach net weight. Apply the touch to the net weight to get fine gold. With ${grams(weightChain.grossMilligrams)} gross and ${grams(weightChain.deductionsMilligrams)} of agreed deductions, the net weight is ${grams(weightChainNet())}; at a touch of ${weightChain.touchPercent}% that net weight holds ${grams(weightChainFine())} of fine gold (${gramsNumber(weightChainNet())} × ${weightChain.touchPercent} ÷ 100). This is a hypothetical illustration of the definitions, not a description of how any particular bill is calculated.`,
           "PentaForge’s billing system gives each issue and receive line gross, deduction and net-weight fields alongside touch, rate and fine-gold fields, with separate cash and fine-gold balance sections. The published screen is an empty bill form: it shows that layout, not a worked calculation, and it does not prove a particular formula or rounding rule.",
           "Making charges are a separate agreement from purity. Businesses fix them per gram, per piece, as a percentage or in another agreed way, and that choice decides which ledger carries the charge. State whether a charge is billed in cash, in fine gold or both, how many decimals each figure keeps and when rounding happens.",
+          `In one specific client billing workflow developed by PentaForge, the manufacturer uses an agreed billing convention where making charges are added as percentage points to the touch percentage to calculate a combined billing rate:
+• Net weight: ${grams(approvedBillingExample.netMilligrams)}
+• Touch: ${approvedBillingExample.touchPercent}%
+• Making charge rate: ${approvedBillingExample.makingChargePoints} percentage points
+• Combined billing rate: ${approvedCombinedRatePercent()}%
+• Fine gold based on touch alone: ${gramsNumber(approvedBillingExample.netMilligrams)} × ${approvedBillingExample.touchPercent} ÷ 100 = ${grams(approvedFineAtTouchMilligrams())}
+• Additional fine-gold equivalent charge: ${gramsNumber(approvedBillingExample.netMilligrams)} × ${approvedBillingExample.makingChargePoints} ÷ 100 = ${grams(approvedMakingChargeMilligrams())}
+• Total fine-gold equivalent billed: ${gramsNumber(approvedBillingExample.netMilligrams)} × ${approvedCombinedRatePercent()} ÷ 100 = ${grams(approvedTotalBilledFineMilligrams())}
+
+This is a specific commercial billing convention agreed for that workflow, not a universal jewellery industry formula. The physical piece contains ${grams(approvedFineAtTouchMilligrams())} of fine gold. The additional ${grams(approvedMakingChargeMilligrams())} is a financial making charge converted into fine-gold units for billing settlement—it is not physical gold contained in the piece or physically transferred to the customer. The total ${grams(approvedTotalBilledFineMilligrams())} represents the customer’s billed fine-gold liability (receivable), keeping billing balances distinct from physical metal movement and stock ledgers. This calculation demonstrates precision to three decimal places (0.001 g); any additional intermediate rounding rules require business confirmation for each deployment.`,
           `Purity is a convention too. The table compares simple karat arithmetic (karat divided by 24) with the default touch values on the purity settings screen of PentaForge’s manufacturing system, where they are configurable. On a hypothetical ${grams(purityImpact.netMilligrams)} of net 22K metal, a touch of ${purityImpact.defaultTouch}% gives ${grams(purityImpactFromTouch())} of fine gold, while 22 ÷ 24 gives ${grams(purityImpactFromKarat())}: a ${grams(purityImpactFromKarat() - purityImpactFromTouch())} gap that appears on every bill unless the business picks one convention and applies it consistently.`
         ],
         "table": {
@@ -156,7 +172,7 @@ export const articles: Article[] = [
         "title": "Is a making charge the same as gold loss?",
         "paragraphs": [
           "No. Weight loss, financial charges, billing liability and stock movements are four different records, and software that merges them makes every balance harder to explain. Weight loss is metal that was issued and not returned or recovered. A making charge is an agreed payment for work. A billing liability is what a customer owes, in cash, in metal or both. A stock movement records where physical metal went.",
-          "Even when an agreed charge is expressed as a weight, it remains a billing figure until the records show that metal changed hands. Whether it also becomes a stock movement, and in which ledger, is a separate decision the business has to make and document. PentaForge’s published systems keep these figures apart: the operations dashboard shows karigar loss and manual making charge as separate cards, and the manufacturing reports list making-charge revenue separately from billed fine gold."
+          "Even when an agreed charge is expressed as a weight (such as the 0.400 g fine-gold equivalent making charge in the billing example above), it remains a billing figure until the records show that metal changed hands. Whether it also becomes a stock movement, and in which ledger, is a separate decision the business has to make and document. Conflating billing liability with physical workshop loss or raw material stock movements creates phantom variances. PentaForge’s published systems keep these figures apart: the operations dashboard shows karigar loss and manual making charge as separate cards, and the manufacturing reports list making-charge revenue separately from billed fine gold."
         ],
         "links": [
           { "href": "/work/jewellery-operations-system", "label": "Operations dashboard evidence" },

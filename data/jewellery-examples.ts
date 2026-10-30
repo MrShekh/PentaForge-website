@@ -39,6 +39,36 @@ export const purityImpact = { netMilligrams: 100000, karat: 22, defaultTouch: 91
 export const purityImpactFromTouch = () => fineMilligramsFromTouch(purityImpact.netMilligrams, purityImpact.defaultTouch);
 export const purityImpactFromKarat = () => fineMilligramsFromKarat(purityImpact.netMilligrams, purityImpact.karat);
 
+/**
+ * Owner-approved specific billing convention used in a PentaForge client workflow.
+ * Convention: Making charges are agreed as percentage points added directly to touch percentage.
+ * Net weight: 20.000 g
+ * Touch: 75% -> Fine gold at touch alone = 20.000 * 75 / 100 = 15.000 g
+ * Making charge rate: 2 percentage points -> Additional fine-gold equivalent charge = 20.000 * 2 / 100 = 0.400 g
+ * Combined calculation rate: 77% -> Total billed fine-gold equivalent = 20.000 * 77 / 100 = 15.400 g
+ *
+ * IMPORTANT: This is a specific commercial billing convention, not a universal industry standard.
+ * The 15.400 g represents billed fine-gold liability (customer receivable), not physical metal
+ * transferred or manufacturing process loss.
+ */
+export const approvedBillingExample = {
+  netMilligrams: 20000,
+  touchPercent: 75,
+  makingChargePoints: 2,
+} as const;
+
+export const approvedCombinedRatePercent = () =>
+  approvedBillingExample.touchPercent + approvedBillingExample.makingChargePoints;
+
+export const approvedFineAtTouchMilligrams = () =>
+  fineMilligramsFromTouch(approvedBillingExample.netMilligrams, approvedBillingExample.touchPercent);
+
+export const approvedMakingChargeMilligrams = () =>
+  fineMilligramsFromTouch(approvedBillingExample.netMilligrams, approvedBillingExample.makingChargePoints);
+
+export const approvedTotalBilledFineMilligrams = () =>
+  fineMilligramsFromTouch(approvedBillingExample.netMilligrams, approvedCombinedRatePercent());
+
 export interface JobStage { name: string; finishedMilligrams: number; inProgressMilligrams: number; scrapEstimatedMilligrams: number; recoveredMilligrams: number }
 
 /**
